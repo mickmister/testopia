@@ -1,17 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
 import { useState } from 'react';
 import { createTask, type Task, validateTitle } from '../lib/tasks';
 
-const getWelcome = createServerFn({ method: 'GET' }).handler(async () => 'Plan your day');
-
 export const Route = createFileRoute('/')({
-  loader: () => getWelcome(),
+  ssr: false,
   component: TaskBoard,
 });
 
 function TaskBoard() {
-  const welcome = Route.useLoaderData();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState('');
 
@@ -29,7 +25,7 @@ function TaskBoard() {
   return (
     <main>
       <h1>Testopia Task Board</h1>
-      <p>{welcome}</p>
+      <p>Plan your day</p>
       <form onSubmit={addTask}>
         <label htmlFor="task-title">Task title</label>
         <input id="task-title" value={title} onChange={event => setTitle(event.target.value)} />
