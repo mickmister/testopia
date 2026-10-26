@@ -14,7 +14,9 @@ export class TaskBoardPage {
       await this.page.getByRole('heading', { name: 'Testopia Task Board' }).waitFor({ timeout: 10000 });
     } catch (cause) {
       const body = (await this.page.locator('body').innerText().catch(() => '<body unavailable>')).slice(0, 2000);
-      throw new Error(`Task board did not render (HTTP ${response?.status() ?? 'unknown'}, URL ${this.page.url()}). Browser errors: ${JSON.stringify(errors)}. Body: ${body}`, { cause });
+      const html = (await this.page.content().catch(() => '<HTML unavailable>')).slice(0, 4000);
+      const scripts = await this.page.locator('script[src]').evaluateAll(nodes => nodes.map(node => (node as HTMLScriptElement).src)).catch(() => []);
+      throw new Error(`Task board did not render (HTTP ${response?.status() ?? 'unknown'}, URL ${this.page.url()}). Browser errors: ${JSON.stringify(errors)}. Body: ${body}. HTML: ${html}. Scripts: ${JSON.stringify(scripts)}`, { cause });
     }
   }
 
