@@ -16,6 +16,8 @@ async function main() {
   if (args[0] && args[0] !== 'test') throw new Error('Usage: testopia test [--type unit,integration,e2e] [--runner vitest|playwright]');
   const selected = (option('--type') || categories.join(',')).split(',').map(x => x.trim());
   for (const category of selected) if (!categories.includes(category)) throw new Error(`Unknown category: ${category}`);
+  const coverage = args.includes('--coverage');
+  if (coverage && !selected.some(x => x !== 'e2e')) throw new Error('Coverage currently requires unit or integration tests (Vitest)');
   const requestedRunner = option('--runner');
   if (requestedRunner && !['vitest', 'playwright'].includes(requestedRunner)) throw new Error(`Unknown runner: ${requestedRunner}`);
   const runners = [...new Set(selected.map(x => x === 'e2e' ? 'playwright' : 'vitest'))]
@@ -33,12 +35,12 @@ async function main() {
     for (const file of files) await compileTest({ file: resolve(root, file), runner, selected: active, outDir, root });
     const config = join(buildRoot, `${runner}.config.mjs`);
     if (runner === 'vitest') {
-      await writeFile(config, `export default { test: { include: ['.testopia/vitest/**/*.test.mjs'], passWithNoTests: true } };\n`);
+      await writeFile(config, `export default { test: { include: ['.testopia/vitest/**/*.test.mjs'], passWithNoTests: true, coverage: { provider: 'v8', reporter: ['text', 'html', 'lcov', 'json'], reportsDirectory: 'coverage' } } };\n`);
     } else {
       await writeFile(config, `export default { testDir: './playwright', testMatch: '**/*.spec.mjs', reporter: 'line', use: { browserName: 'chromium' } };\n`);
     }
     const bin = resolve(root, 'node_modules', '.bin', runner === 'vitest' ? 'vitest' : 'playwright');
-    const runnerArgs = runner === 'vitest' ? ['run', '--config', config] : ['test', '--config', config];
+    const runnerArgs = runner === 'vitest' ? ['run', '--config', config, ...(coverage ? ['--coverage'] : [])] : ['test', '--config', config];
     console.log(`Testopia: running ${active.join(',')} with ${runner}`);
     const result = spawnSync(bin, runnerArgs, { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' });
     if (result.error) throw result.error;
