@@ -48,7 +48,21 @@ node src/cli.js test --type unit,integration
 node src/cli.js test --runner playwright --type e2e
 ```
 
-Generated bundles and temporary runner configs are written to `.testopia/`. Source maps are enabled. This is a **vertical slice**, not a published or feature-complete library: fixture injection, browser application coverage, richer CLI filtering, and full TypeScript package ergonomics are still on the roadmap.
+### Filtering
+
+Filters work across Vitest and Playwright. File filters are glob patterns relative to the working directory; repeat `--file` to select multiple globs (union). Name filters are **literal, case-sensitive substrings** of the full test title (feature + scenario + test), combined with AND semantics.
+
+```sh
+node src/cli.js test --file 'example/**/*.spec.ts'
+node src/cli.js test --file 'example/**/*.spec.ts' --type e2e
+node src/cli.js test --test 'normalizes whitespace'
+node src/cli.js test --feature 'Task board' --scenario 'A user adds a task'
+node src/cli.js test --file 'example/**/*.spec.ts' --scenario 'A user completes a task' --type integration,e2e
+```
+
+`--file` restricts source files before compilation; `--feature`, `--scenario`, and `--test` use the native runner's full-name filtering after category compilation. These name filters do not remove individual test callbacks from bundles. Quote globs to avoid shell expansion. An unmatched file glob fails immediately; an unmatched name filter is reported by the underlying runner.
+
+Generated bundles and temporary runner configs are written to `.testopia/`. Source maps are enabled. This is a **vertical slice**, not a published or feature-complete library: fixture injection, browser application coverage, and full TypeScript package ergonomics are still on the roadmap.
 
 ## CI
 
