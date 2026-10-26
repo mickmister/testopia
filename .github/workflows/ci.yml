@@ -38,7 +38,7 @@ jobs:
         run: npm test
       - name: Run Testopia (Vitest + Playwright)
         run: npm run test:framework
-      - name: Upload test artifacts on failure
+      - name: Run Vitest coverage\n        run: npm run test:coverage\n      - name: Upload coverage\n        if: always()\n        uses: actions/upload-artifact@v4\n        with:\n          name: coverage-node-${{ matrix.node }}\n          path: coverage/\n          if-no-files-found: ignore\n      - name: Upload test artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
