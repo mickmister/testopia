@@ -10,14 +10,11 @@ export const Route = createRootRoute({
     ],
   }),
   component: Root,
+  shellComponent: Document,
 });
 
 function Root() {
-  return (
-    <Document>
-      <Outlet />
-    </Document>
-  );
+  return <Outlet />;
 }
 
 function Document({ children }: { children: ReactNode }) {
