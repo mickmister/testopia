@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '**'
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -17,7 +18,7 @@ jobs:
   test:
     name: Test (Node.js ${{ matrix.node }})
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -29,5 +30,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Run tests
-        run: npm run test:ci
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run compiler and smoke tests
+        run: npm test
+      - name: Run Testopia (Vitest + Playwright)
+        run: npm run test:framework
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-node-${{ matrix.node }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
