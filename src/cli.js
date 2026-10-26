@@ -23,7 +23,7 @@ async function main() {
   const runners = [...new Set(selected.map(x => x === 'e2e' ? 'playwright' : 'vitest'))]
     .filter(x => !requestedRunner || x === requestedRunner);
   if (requestedRunner && !runners.length) throw new Error('Requested runner does not support selected categories');
-  const files = globSync('**/*.spec.ts', { cwd: root, exclude: ['node_modules/**', '.testopia/**'] }).sort();
+  const files = globSync('**/*.spec.ts', { cwd: root, exclude: ['**/node_modules/**', '.testopia/**', '**/.output/**', '**/.tanstack/**'] }).sort();
   if (!files.length) throw new Error('No .spec.ts files found');
   const buildRoot = join(root, '.testopia');
   await rm(buildRoot, { recursive: true, force: true });
