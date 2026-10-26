@@ -29,7 +29,7 @@ feature('User authentication', () => {
 });
 ```
 
-Only selected test calls are retained in the compiled output. The core engine is replaced at build time using Vite aliases; test declarations are **not** rewritten into runner-specific registration code. Ordinary local and imported helpers work as usual. See [the runnable example](examples/basic/auth.spec.ts) and [its Page Object](examples/basic/login-page.ts).
+Only selected test calls are retained in the compiled output. The core engine is replaced at build time using Vite aliases; test declarations are **not** rewritten into runner-specific registration code. Ordinary local and imported helpers work as usual. See [the TanStack Start app](example/README.md), [its mixed-category tests](example/tests/task-board.spec.ts), and [the initial smoke example](examples/basic/auth.spec.ts) and [its Page Object](examples/basic/login-page.ts).
 
 ## Running tests
 
@@ -37,6 +37,7 @@ Requires Node.js 22 or newer.
 
 ```sh
 npm install
+npm install --prefix example
 npx playwright install chromium
 npm test                     # compiler and smoke tests
 npm run test:framework       # all categories (Vitest + Playwright)
