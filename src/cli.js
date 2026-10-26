@@ -37,7 +37,7 @@ async function main() {
     if (runner === 'vitest') {
       await writeFile(config, `export default { test: { include: ['.testopia/vitest/**/*.test.mjs'], passWithNoTests: true, coverage: { provider: 'v8', reporter: ['text', 'html', 'lcov', 'json'], reportsDirectory: 'coverage' } } };\n`);
     } else {
-      await writeFile(config, `export default { testDir: './playwright', testMatch: '**/*.spec.mjs', reporter: 'line', use: { browserName: 'chromium' } };\n`);
+      await writeFile(config, `export default { testDir: './playwright', testMatch: '**/*.spec.mjs', reporter: 'line', use: { browserName: 'chromium' }, webServer: { command: 'npm run dev --prefix example', url: 'http://127.0.0.1:3000/', reuseExistingServer: !process.env.CI, timeout: 120000 } };\n`);
     }
     const bin = resolve(root, 'node_modules', '.bin', runner === 'vitest' ? 'vitest' : 'playwright');
     const runnerArgs = runner === 'vitest' ? ['run', '--config', config, ...(coverage ? ['--coverage'] : [])] : ['test', '--config', config];
