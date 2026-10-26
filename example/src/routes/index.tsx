@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { createTask, type Task, validateTitle } from '../lib/tasks';
 
 export const Route = createFileRoute('/')({
-  ssr: false,
   component: TaskBoard,
 });
 
