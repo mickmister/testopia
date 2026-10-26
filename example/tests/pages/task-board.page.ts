@@ -5,6 +5,7 @@ export class TaskBoardPage {
 
   async goto() {
     await this.page.goto('http://127.0.0.1:3000/');
+    await this.page.getByRole('heading', { name: 'Testopia Task Board' }).waitFor({ timeout: 10000 });
   }
 
   async addTask(title: string) {
