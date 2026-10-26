@@ -31,6 +31,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Install TanStack Start example dependencies
+        run: npm install --prefix example --no-audit --no-fund
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run compiler and smoke tests
