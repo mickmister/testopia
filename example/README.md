@@ -15,7 +15,7 @@ npx playwright install chromium
 npm run test:framework
 ```
 
-The Testopia CLI discovers `example/tests/task-board.spec.ts` alongside the earlier smoke example. For E2E, Testopia starts the actual TanStack Start Vite dev server automatically using Playwright's `webServer` configuration. You can also run the app manually with `npm run dev --prefix example`.
+The app uses TanStack Start SPA mode: routes render in the browser, with no server function or server-rendered route data. The development server serves the client application shell.\n\nThe Testopia CLI discovers `example/tests/task-board.spec.ts` alongside the earlier smoke example. For E2E, Testopia starts the actual TanStack Start Vite dev server automatically using Playwright's `webServer` configuration. You can also run the app manually with `npm run dev --prefix example`.
 
 ```sh
 npm run test:unit
@@ -23,4 +23,4 @@ npm run test:integration
 npm run test:e2e
 ```
 
-This is an integration demonstration, not a production data store: the React UI keeps tasks in component state, while integration tests verify a separate in-memory `TaskRepository`. The E2E tests exercise the actual TanStack Start app and its server-rendered welcome message.
+This is an integration demonstration, not a production data store: the React UI keeps tasks in component state, while integration tests verify a separate in-memory `TaskRepository`. The E2E tests exercise the actual TanStack Start app and its client-rendered welcome message.
