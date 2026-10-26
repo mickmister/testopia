@@ -47,7 +47,7 @@ node src/cli.js test --type unit,integration
 node src/cli.js test --runner playwright --type e2e
 ```
 
-Generated bundles and temporary runner configs are written to `.testopia/`. Source maps are enabled. This is a **vertical slice**, not a published or feature-complete library: fixture injection, code coverage, richer CLI filtering, and full TypeScript package ergonomics are still on the roadmap.
+Generated bundles and temporary runner configs are written to `.testopia/`. Source maps are enabled. This is a **vertical slice**, not a published or feature-complete library: fixture injection, browser application coverage, richer CLI filtering, and full TypeScript package ergonomics are still on the roadmap.
 
 ## CI
 
