@@ -14,7 +14,8 @@ permissions:
   contents: read
   actions: write
   pull-requests: read
-  issues: read
+  issues: write
+  checks: read
 jobs:
   route:
     uses: mickmister/gh-agentic-workflows/.github/workflows/testopia-router.lock.yml@4575031680336772611ea45ff5ce7d39f6f66bdf
