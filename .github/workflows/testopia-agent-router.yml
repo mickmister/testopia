@@ -7,9 +7,6 @@ on:
         required: false
         type: string
         default: Investigate the failing browser CI using Gas City
-  push:
-    branches: [feat/mixed-runner-vertical-slice]
-    paths: [.github/workflows/testopia-agent-router.yml]
 permissions:
   contents: read
   actions: write
