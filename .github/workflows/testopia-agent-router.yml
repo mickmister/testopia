@@ -18,7 +18,7 @@ permissions:
   checks: read
 jobs:
   route:
-    uses: mickmister/gh-agentic-workflows/.github/workflows/testopia-router.lock.yml@2721e2af74733667da9280abc0408b824f984356
+    uses: mickmister/gh-agentic-workflows/.github/workflows/testopia-router.lock.yml@2491bbd1c2a632f0644ca1c4b2463253b87acf5d
     with:
       request: ${{ inputs.request || 'Investigate the failing browser CI using Gas City' }}
     secrets:
