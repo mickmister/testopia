@@ -1,0 +1,24 @@
+name: Testopia Gas City intent router
+on:
+  workflow_dispatch:
+    inputs:
+      request:
+        description: Operator request for PR #3
+        required: false
+        type: string
+        default: Investigate the failing browser CI using Gas City
+  push:
+    branches: [feat/mixed-runner-vertical-slice]
+    paths: [.github/workflows/testopia-agent-router.yml]
+permissions:
+  contents: read
+  actions: write
+  pull-requests: read
+  issues: read
+jobs:
+  route:
+    uses: mickmister/gh-agentic-workflows/.github/workflows/testopia-router.lock.yml@4575031680336772611ea45ff5ce7d39f6f66bdf
+    with:
+      request: ${{ inputs.request || 'Investigate the failing browser CI using Gas City' }}
+    secrets:
+      COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
