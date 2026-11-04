@@ -23,3 +23,36 @@ jobs:
       request: ${{ inputs.request || 'Investigate the failing browser CI using Gas City' }}
     secrets:
       COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+  report:
+    needs: route
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Post router result to Testopia PR #3
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          OUTCOME: ${{ needs.route.result }}
+        run: |
+          set -euo pipefail
+          test "$REPO" = "mickmister/testopia"
+          gh api "repos/$REPO/pulls/3" --jq '.state' | grep -Fx open
+          marker="<!-- testopia-agent-router-run:$GITHUB_RUN_ID -->"
+          url="$GITHUB_SERVER_URL/$REPO/actions/runs/$GITHUB_RUN_ID"
+          body="$(printf '%s\n' "$marker" "### Agent router execution" \
+            "- Result: **$OUTCOME**" \
+            "- [Router run and diagnostics]($url)" \
+            "" "This is the routing result. A successfully dispatched Gas City worker reports separately.")"
+          existing="$(gh api --paginate "repos/$REPO/issues/3/comments?per_page=100" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(\"$marker\")) | .id" | head -1)"
+          payload="$(jq -n --arg body "$body" '{body:$body}')"
+          if [[ -n "$existing" ]]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input - <<< "$payload"
+          else
+            gh api -X POST "repos/$REPO/issues/3/comments" --input - <<< "$payload"
+          fi
